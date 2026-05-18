@@ -113,7 +113,7 @@ async def handle_message(update: Update, context):
         USER_DATA_STORE[chat_id]['hasil_mentah_web'] = hasil_mentah_web
         
         # Analisis AI Mode Ketat
-        prompt_siap = prompt_ketat.fill(nama_produk=nama_produk, hasil_pencarian=hasil_mentah_web, format_instruksi=output_parser.get_format_instructions())
+        prompt_siap = prompt_ketat.format_messages(nama_produk=nama_produk, hasil_pencarian=hasil_mentah_web, format_instruksi=output_parser.get_format_instructions())
         respon_ai = llm.invoke(prompt_siap)
         hasil = output_parser.parse(respon_ai.content)
         
@@ -163,7 +163,7 @@ async def handle_callback(update: Update, context):
     if query.data == 'mode_bebas':
         await query.edit_message_text(text=f"🔄 Mengabaikan kriteria... Mencari produk paling mahal untuk '{nama_produk}'...")
         try:
-            prompt_siap = prompt_bebas.fill(nama_produk=nama_produk, hasil_pencarian=hasil_mentah_web, format_instruksi=output_parser.get_format_instructions())
+            prompt_siap = prompt_bebas.format_messages(nama_produk=nama_produk, hasil_pencarian=hasil_mentah_web, format_instruksi=output_parser.get_format_instructions())
             respon_ai = llm.invoke(prompt_siap)
             hasil = output_parser.parse(respon_ai.content)
             
