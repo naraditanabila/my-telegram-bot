@@ -1,5 +1,4 @@
 import os
-import json
 import logging
 import asyncio
 from flask import Flask, request
@@ -21,6 +20,12 @@ app = Flask(__name__)
 # =====================================================================
 # 1. KONFIGURASI API KEY (Mengambil dari Environment Variables Vercel)
 # =====================================================================
+from pathlib import Path
+from dotenv import load_dotenv
+# Modifikasi load_dotenv agar mencari file .env di root folder (satu tingkat di atas folder api)
+base_dir = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=base_dir / '.env')
+
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 
