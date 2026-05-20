@@ -5,6 +5,7 @@ from flask import Flask, request
 from pydantic import BaseModel, Field
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters
+from openai import OpenAI
 
 from langchain_openai import ChatOpenAI
 from langchain_community.tools import DuckDuckGoSearchRun
@@ -26,11 +27,19 @@ from dotenv import load_dotenv
 base_dir = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=base_dir / '.env')
 
+
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 
 # Inisialisasi komponen AI
-llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, openai_api_key=OPENAI_API_KEY)
+#llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, openai_api_key=OPENAI_API_KEY)
+llm = ChatOpenAI(
+    model="telkom-ai", # Sesuaikan dengan model yang didukung Telkom LLM
+    temperature=0,
+    openai_api_key=os.getenv("TELKOM_API_KEY"),
+    openai_api_base="https://telkom-ai-dag-api.apilogy.id/Telkom-LLM/0.0.4/llm",
+    default_headers={"x-api-key": os.getenv("TELKOM_API_KEY")}
+)
 search_tool = DuckDuckGoSearchRun()
 
 # Inisialisasi Aplikasi Telegram (Tanpa .run_polling())
